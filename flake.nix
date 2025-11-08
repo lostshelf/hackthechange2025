@@ -22,6 +22,7 @@
             gnumake
             zlib
             pkg-config
+	    nodeModules.tailwindcss
           ];
           
           shellHook = ''
