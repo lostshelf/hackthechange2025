@@ -4,6 +4,8 @@ import type React from 'react'
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import * as L from 'leaflet'
 
+const API_URL = 'http://ec2-3-151-64-162.us-east-2.compute.amazonaws.com:3000';
+
 const IssueState = {
   UNRESOLVED: "UNRESOLVED",
   IN_PROGRESS: "IN PROGRESS",
@@ -60,8 +62,38 @@ function Pin({ lat, lng, opacity = 1 }: PinProps) {
   return <Marker position={[lat, lng]} icon={PIN_ICON} opacity={opacity} />
 }
 
+const useApiData = (endpoint: string) => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${API_URL}${endpoint}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error. status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        setData(result);
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [endpoint]);
+
+  return { data, loading, error };
+}
+
 function HomePage() {
-  const [activePinState, setPinState] = useState(PinSelectionState.SELECTED)
+  const [activePinState, setPinState] = useState(PinSelectionState.SELECTED)  
 
   const [newTicketData, setNewTicketData] = useState({
     Image: "",
@@ -70,6 +102,10 @@ function HomePage() {
     Latitude: 0,
     Longitude: 0
   })
+
+  const { data: tickets, loading, error } = useApiData("/api/issue/get_all");
+
+  console.log(tickets);
 
   const [message, setMessage] = useState("")
   const handleSend: React.FormEventHandler<HTMLFormElement> = (e) => {
