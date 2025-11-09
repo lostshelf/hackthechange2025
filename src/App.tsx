@@ -1,4 +1,6 @@
 import './App.css'
+import { useEffect } from 'react'
+import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 
 const IssueState = {
   UNATTENDED: "UNATTENDED",
@@ -36,19 +38,54 @@ function DiscussionPost({
 }
 
 function App() {
+  const tileLayer = (
+    // @ts-expect-error React 19 typings mismatch for react-leaflet
+    <TileLayer
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      attribution="OpenStreetMap contributors"
+    />
+  )
+
+  function MapResizer() {
+    const map = useMap()
+    useEffect(() => {
+      const invalidate = () => map.invalidateSize()
+      const id = window.setTimeout(invalidate, 0)
+      window.addEventListener('resize', invalidate)
+      return () => {
+        window.clearTimeout(id)
+        window.removeEventListener('resize', invalidate)
+      }
+    }, [map])
+    return null
+  }
+
+  const mapEl = (
+    // @ts-expect-error React 19 typings mismatch for react-leaflet
+    <MapContainer
+      center={[-34.6037, -58.3816]}
+      zoom={13}
+      scrollWheelZoom
+      className="h-full w-full z-0"
+      style={{ height: '100%', width: '100%' }}
+    >
+      <MapResizer />
+      {tileLayer}
+    </MapContainer>
+  )
 
   return (
 
     // parent div
-    <div className="font-light w-full h-screen overflow-hidden m-0 p-0">
+    <div className="font-light w-screen h-screen overflow-hidden m-0 p-0">
       <div className="grid grid-cols-[70%_30%] h-full">
 
-        <div className="relative h-full">
+        <div className="relative h-full w-full">
           {/* Map */}
-          <img src="https://storage.googleapis.com/support-forums-api/attachment/message-142697457-14821742893909794832.PNG" className="h-full w-full object-cover" />
+          {mapEl}
 
           {/* Image and Description */}
-          <div className="absolute bottom-0 left-0 right-0 grid grid-cols-2 bg-gray-950/80 backdrop-blur-sm">
+          <div className="absolute bottom-0 left-0 right-0 grid grid-cols-2 bg-gray-950/80 backdrop-blur-sm z-[1100]">
             <img src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png" className="w-full h-48 object-cover" />
 
 
@@ -66,13 +103,13 @@ function App() {
         </div>
 
         {/* Column on the right */}
-        <div className="container bg-gray-900 text-left m-0 p-2 h-full flex flex-col overflow-hidden">
+        <div className="bg-gray-900 text-left m-0 p-2 h-full w-full flex flex-col overflow-hidden">
           {/* State of Issue */}
           <p className="pl-2 m-1 font-medium text-[2rem]">
             Current State: {IssueState.UNATTENDED}
           </p>
 
-          <div className="container text-xs bg-gray-800 w-full p-2 rounded-2xl flex-1 min-h-0 overflow-y-auto">
+          <div className="text-xs bg-gray-800 w-full p-2 rounded-2xl flex-1 min-h-0 overflow-y-auto">
 
             {/* A discussion post*/}
             <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
@@ -103,6 +140,7 @@ function App() {
 
           </div>
 
+          {/* Chatbox */}
           <input type="text" className="container h-[20%] bg-gray-700 rounded-2xl mt-2">
           
           </input>
