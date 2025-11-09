@@ -253,7 +253,7 @@ function HomePage() {
                     type="file"
                     accept="image/*"
                     className="hidden"
-                    onChange={() => {
+                    onChange={async () => {
                        {
                         setNewTicketData({
                           Image: "",
@@ -262,6 +262,8 @@ function HomePage() {
                           Longitude: newTicketData.Longitude,
                           Latitude: newTicketData.Latitude
                         })
+                      
+                        setPinState(PinSelectionState.UNSELECTED) 
                       }
                     }}
                   />
@@ -293,11 +295,25 @@ function HomePage() {
                   />
 
                   <button className="w-full" onClick={
-                    () => {
+                    async () => {
                       if (!(newTicketData.Description && newTicketData.Latitude && newTicketData.Longitude && newTicketData.Title)) {
                         alert("Please fill in all required fields (Everything except for image)")
                         return;
                       }
+
+                      await fetch(`${API_URL}/api/issue/post`, {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                          title: newTicketData.Title,
+                          description: newTicketData.Description,
+                          latitude: newTicketData.Latitude,
+                          longitude: newTicketData.Longitude
+                        }),
+                      }); 
+                      
                       setPinState(PinSelectionState.UNSELECTED)
                     }
                   }>Submit</button>
