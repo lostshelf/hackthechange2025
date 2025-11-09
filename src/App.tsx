@@ -1,5 +1,6 @@
 import './App.css'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import type React from 'react'
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 
 const IssueState = {
@@ -38,6 +39,13 @@ function DiscussionPost({
 }
 
 function App() {
+  const [message, setMessage] = useState("")
+  const handleSend: React.FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault()
+    if (!message.trim()) return
+    console.log("sent", message)
+    setMessage("")
+  }
   const tileLayer = (
     // @ts-expect-error React 19 typings mismatch for react-leaflet
     <TileLayer
@@ -141,9 +149,22 @@ function App() {
           </div>
 
           {/* Chatbox */}
-          <input type="text" className="container h-[20%] bg-gray-700 rounded-2xl mt-2">
-          
-          </input>
+          <form onSubmit={handleSend} className="mt-2 bg-gray-800 rounded-2xl p-2 flex items-center gap-2">
+            <input
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Type a message..."
+              className="flex-1 bg-gray-700 text-white placeholder-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-500 text-white font-medium px-4 py-2 rounded-lg disabled:opacity-50"
+              disabled={!message.trim()}
+            >
+              Send
+            </button>
+          </form>
 
         </div>
       </div>
