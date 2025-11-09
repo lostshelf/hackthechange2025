@@ -42,9 +42,9 @@ function App() {
   let [activePinState, setPinState] = useState(PinSelectionState.NEW)
 
   let [ticketData, setTicketData] = useState({
-    Image : "",
-    Title : "",
-    Description : "",
+    Image: "",
+    Title: "",
+    Description: "",
     Latitude: 0,
     Longitude: 0
   })
@@ -96,7 +96,7 @@ function App() {
 
     // parent div
     <div className="font-light w-screen h-screen overflow-hidden m-0 p-0">
-      <div className="grid grid-cols-[70%_30%] h-full">
+      <div className={"grid grid-cols-["+(activePinState === PinSelectionState.SELECTED && 70 || 100).toString()+"%_"+((activePinState === PinSelectionState.SELECTED && 30 || 0).toString())+"%] h-full"}>
 
         <div className="relative h-full w-full">
           {/* Map */}
@@ -141,7 +141,7 @@ function App() {
                       const file = e.currentTarget.files?.[0]
                       if (file) {
                         const url = URL.createObjectURL(file)
-                        
+
                         setTicketData({
                           Image: url,
                           Title: ticketData.Title,
@@ -161,7 +161,7 @@ function App() {
                     <input
                       type="text"
                       value={ticketData.Title}
-                      onChange={(e) => setTicketData(prev => ({...prev, Title: e.target.value}))}
+                      onChange={(e) => setTicketData(prev => ({ ...prev, Title: e.target.value }))}
                       placeholder="Insert title here"
                       className="bg-transparent text-white text-[2rem] font-extrabold outline-none border-b border-gray-600 focus:border-blue-500"
                     />
@@ -169,7 +169,7 @@ function App() {
 
                   <textarea
                     value={ticketData.Description}
-                    onChange={(e) => setTicketData(prev => ({...prev, Description: e.target.value}))}
+                    onChange={(e) => setTicketData(prev => ({ ...prev, Description: e.target.value }))}
                     placeholder="Insert summary here"
                     rows={3}
                     className="mt-2 w-full bg-transparent text-white text-[1.1rem] outline-none border border-gray-600 rounded-md p-2 focus:border-blue-500"
@@ -183,62 +183,69 @@ function App() {
         </div>
 
         {/* Column on the right should only be visible to already created data*/}
-        <div className="bg-gray-900 text-left m-0 p-2 h-full w-full flex flex-col overflow-hidden">
-          {/* State of Issue */}
-          <p className="pl-2 m-1 font-medium text-[2rem]">
-            Current State: {IssueState.UNRESOLVED}
-          </p>
 
-          <div className="text-xs bg-gray-800 w-full p-2 rounded-2xl flex-1 min-h-0 overflow-y-auto">
+        {activePinState === PinSelectionState.SELECTED && (
+          <>
 
-            {/* A discussion post*/}
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
-            <DiscussionPost name="Test Name" comment="My comment" />
+            <div className="bg-gray-900 text-left m-0 p-2 h-full w-full flex flex-col overflow-hidden">
+              {/* State of Issue */}
+              <p className="pl-2 m-1 font-medium text-[2rem]">
+                Current State: {IssueState.UNRESOLVED}
+              </p>
 
-          </div>
+              <div className="text-xs bg-gray-800 w-full p-2 rounded-2xl flex-1 min-h-0 overflow-y-auto">
 
-          {/* Chatbox */}
-          <form onSubmit={handleSend} className="mt-2 bg-gray-800 rounded-2xl p-2 flex items-center gap-2">
-            <input
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Type a message..."
-              className="flex-1 bg-gray-700 text-white placeholder-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              type="submit"
-              className="bg-blue-600 hover:bg-blue-500 text-white font-medium px-4 py-2 rounded-lg disabled:opacity-50"
-              disabled={!message.trim()}
-            >
-              Send
-            </button>
-          </form>
+                {/* A discussion post*/}
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
+                <DiscussionPost name="Test Name" comment="My comment" />
 
-        </div>
+              </div>
+
+              {/* Chatbox */}
+              <form onSubmit={handleSend} className="mt-2 bg-gray-800 rounded-2xl p-2 flex items-center gap-2">
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Type a message..."
+                  className="flex-1 bg-gray-700 text-white placeholder-gray-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                  type="submit"
+                  className="bg-blue-600 hover:bg-blue-500 text-white font-medium px-4 py-2 rounded-lg disabled:opacity-50"
+                  disabled={!message.trim()}
+                >
+                  Send
+                </button>
+              </form>
+            </div>
+          </>
+        )}
+
+
       </div>
     </div>
   )
