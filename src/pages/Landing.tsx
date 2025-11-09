@@ -43,15 +43,8 @@ function LandingPage() {
             </section>
 
             <div className="text-gray-400 text-center text-2xl mt-50">
-                Our goal is to create a community-driven approach for tracking non-emerency issues within the city, and to help prioritize them by their prevalence. 
+                Our goal is to create a community-driven approach for tracking non-emerency issues within the city. Made for Hack the Change 2025. 
             </div>
-
-            <h1 className="mt-10 p-10 text-center">Features</h1>
-            <ul className="m-10 text-2xl space-y-5">
-                <li>• Describe an issue, take a picture, and submit a ticket.</li>
-                <li>• Bump tickets relevant you to help determine how prevalent the issue is, and which issues need to be prioritized.</li>
-                <li>• Provide feedback in response to an issue in the form of discussions.</li>
-            </ul>
         </div>
     );
 }

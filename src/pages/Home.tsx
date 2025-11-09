@@ -215,7 +215,7 @@ function HomePage() {
 
     // parent div
     <div className="font-light w-screen h-screen overflow-hidden m-0 p-0">
-      <div className={activePinState === PinSelectionState.SELECTED ? "grid grid-cols-[minmax(0,70%)_minmax(0,30%)] h-full" : "grid grid-cols-[minmax(0,100%)_0%] h-full"}>
+      <div className={"h-full"}>
 
         <div className="relative h-full w-full">
           {/* Map */}
@@ -226,14 +226,11 @@ function HomePage() {
           {activePinState === PinSelectionState.SELECTED && (
             <>
 
-              {/* Image and Description */}
+              {/*Description */}
               <div className="absolute bottom-0 left-0 right-0 grid grid-cols-2 bg-gray-950/80 backdrop-blur-sm z-[1100]">
-                <img src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png" className="w-full h-48 cover" />
-
                 <div className="text-left p-2">
 
-                  <div className="grid grid-cols-[4%_96%] gap-2 items-center">
-                    <button aria-label="Push" className="text-gray-400 text-3xl! text-center p-0!"> 🡅 </button>
+                  <div className="items-center">
                     <p className="text-[2rem] font-extrabold">{selectedTicketData.Title}</p>
                   </div>
 
@@ -247,40 +244,19 @@ function HomePage() {
           {/* If a Pin is Selected and must be created */}
           {activePinState === PinSelectionState.NEW && (
             <>
-              {/* Image and Description */}
-              <div className="absolute bottom-0 left-0 right-0 grid grid-cols-2 bg-gray-950/80 backdrop-blur-sm z-[1100]">
+              <div className="absolute bottom-0 left-0 right-0 bg-gray-950/80 backdrop-blur-sm z-1100">
 
                 <div className="grid grid-cols-1">
-                  {newTicketData.Image ? (
-                    <>
-                      <img src={newTicketData.Image} className="w-full h-48 object-cover rounded" />
-                      <label
-                        htmlFor="ticket-image-input"
-                        className="mt-2 inline-flex items-center justify-center rounded-md border border-gray-600 bg-gray-800/60 text-white px-3 py-2 cursor-pointer hover:bg-gray-700/60"
-                      >
-                        Change Image
-                      </label>
-                    </>
-                  ) : (
-                    <label
-                      htmlFor="ticket-image-input"
-                      className="flex h-48 w-full items-center justify-center rounded-md border-2 border-dashed border-gray-500 bg-gray-800/40 text-gray-200 cursor-pointer hover:border-blue-400 hover:bg-gray-800/60"
-                    >
-                      <span className="text-sm">Click to choose image</span>
-                    </label>
-                  )}
 
                   <input
                     id="ticket-image-input"
                     type="file"
                     accept="image/*"
                     className="hidden"
-                    onChange={(e) => {
-                      const file = e.currentTarget.files?.[0]
-                      if (file) {
-                        const url = URL.createObjectURL(file)
+                    onChange={() => {
+                       {
                         setNewTicketData({
-                          Image: url,
+                          Image: "",
                           Title: newTicketData.Title,
                           Description: newTicketData.Description,
                           Longitude: newTicketData.Longitude,
@@ -293,8 +269,7 @@ function HomePage() {
 
                 <div className="text-left p-2">
 
-                  <div className="grid grid-cols-[4%_82.5%_10%] gap-2 items-center">
-                    <button aria-label="Push" className="text-gray-400 text-3xl! text-center p-0!"> 🡅 </button>
+                  <div className="grid grid-cols-[80%_20%] gap-2 items-center">
                     <input
                       type="text"
                       value={newTicketData.Title}
@@ -339,42 +314,11 @@ function HomePage() {
         {activePinState === PinSelectionState.SELECTED && (
           <>
 
-            <div className="bg-gray-900 text-left m-0 p-2 h-full w-full flex flex-col overflow-hidden">
+            <div className="bg-gray-900 text-left m-0 p-2 h-full w-0 flex flex-col overflow-hidden">
               {/* State of Issue */}
               <p className="pl-2 m-1 font-medium text-[2rem]">
                 Current State: {selectedTicketData.State}
               </p>
-
-              <div className="text-xs bg-gray-800 w-full p-2 rounded-2xl flex-1 min-h-0 overflow-y-auto">
-
-                {/* A discussion post*/}
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-                <DiscussionPost name="Test Name" comment="My comment" />
-
-              </div>
 
               {/* Chatbox */}
               <form onSubmit={handleSend} className="mt-2 bg-gray-800 rounded-2xl p-2 flex items-center gap-2">
