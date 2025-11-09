@@ -12,6 +12,13 @@ function LoginPage() {
         console.log(`Inputted password is: ${password}`);
     }
 
+    const handleCreate = (e) => {
+        e.preventDefault();
+        // TODO: Send information to the server
+        console.log(`Inputted email is: ${email}`);
+        console.log(`Inputted password is: ${password}`);
+    }
+
     return (
         <div className="bg-black border-b border-black rounded-lg p-2 h-screen text-center flex flex-col items-center justify-center font-sans">
             {/* App Title */}
@@ -20,7 +27,7 @@ function LoginPage() {
             </h1>
             {/* Login Title */}
             <h1 className="text-2xl font-bold mb-6 text-gray-200">
-                LOG IN
+                SIGN UP / LOG IN
             </h1>
 
             {/* Input label for email address */}
@@ -54,14 +61,13 @@ function LoginPage() {
             </div>
 
             {/* Buttons */}
-            <div className="flex space-x-19 justify-center">
+            <div className="flex space-x-15 justify-center">
                 {/* Create new account */}
-                {/* TODO: Change page to create a new account */}
                 <button
                     type="button"
                     className="text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg px-5 py-2.5 text-center"
-                    onClick={() => console.log("new")}>
-                    Create Account
+                    onClick={handleCreate}>
+                    Create new Account
                 </button>
 
                 {/* Login with input */}
@@ -69,7 +75,7 @@ function LoginPage() {
                     type="submit"
                     className="text-white bg-gray-800 hover:bg-gray-900 font-medium rounded-lg px-5 py-2.5 text-center"
                     onClick={handleLogin}>
-                    Enter
+                    Login
                 </button>
             </div>
         </div>
