@@ -182,7 +182,7 @@ function HomePage() {
         <Pin
           lat={newTicketData.Latitude}
           lng={newTicketData.Longitude}
-          opacity={activePinState === PinSelectionState.SELECTED ? 0 : 1}
+          opacity={activePinState === PinSelectionState.NEW ? 1 : 0}
         />
       )}
       {
