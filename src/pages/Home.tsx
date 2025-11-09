@@ -56,13 +56,13 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 })
 
-type PinProps = { lat: number; lng: number; opacity?: number, onClick? }
-function Pin({ lat, lng, opacity = 1, onClick }: PinProps) {
+type PinProps = { lat: number; lng: number; opacity?: number, onClick?, ticket }
+function Pin({ lat, lng, opacity = 1, onClick, ticket }: PinProps) {
   const handleMarkerClick = useCallback((event) => {
     if (onClick) {
-      onClick(event, {lat, lng, opacity});
+      onClick(event, {lat, lng, opacity, ticket});
     }
-  }, [onClick, {lat, lng, opacity}]);
+  }, [onClick, {lat, lng, opacity, ticket}]);
   const markerEventHandlers = {
     click: handleMarkerClick,
   };
@@ -117,7 +117,7 @@ function HomePage() {
     if (tic.latitude == null || tic.longitude == null) {
       return null;
     }
-    return (<Pin lat={tic.latitude} lng={tic.longitude} opacity={1} onClick={(event) => {setPinState(PinSelectionState.SELECTED)}}/>)
+    return (<Pin lat={tic.latitude} lng={tic.longitude} opacity={1} onClick={(event, data) => {setPinState(PinSelectionState.SELECTED)}}/>)
   }) : null;
 
   const [message, setMessage] = useState("")
