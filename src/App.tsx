@@ -61,7 +61,7 @@ function Pin({ lat, lng, opacity = 1 }: PinProps) {
 }
 
 function App() {
-  const [activePinState, setPinState] = useState(PinSelectionState.NEW)
+  const [activePinState, setPinState] = useState(PinSelectionState.SELECTED)
 
   const [newTicketData, setNewTicketData] = useState({
     Image: "",
@@ -143,7 +143,7 @@ function App() {
 
     // parent div
     <div className="font-light w-screen h-screen overflow-hidden m-0 p-0">
-      <div className={"grid grid-cols-["+(activePinState === PinSelectionState.SELECTED && 70 || 100).toString()+"%_"+((activePinState === PinSelectionState.SELECTED && 30 || 0).toString())+"%] h-full"}>
+      <div className={activePinState === PinSelectionState.SELECTED ? "grid grid-cols-[minmax(0,70%)_minmax(0,30%)] h-full" : "grid grid-cols-[minmax(0,100%)_0%] h-full"}>
 
         <div className="relative h-full w-full">
           {/* Map */}
