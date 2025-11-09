@@ -1,7 +1,7 @@
 import './App.css'
 import { useEffect, useState } from 'react'
 import type React from 'react'
-import { MapContainer, TileLayer, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, useMap, useMapEvents } from 'react-leaflet'
 
 const IssueState = {
   UNRESOLVED: "UNRESOLVED",
@@ -78,6 +78,22 @@ function App() {
     return null
   }
 
+  function MapClick() {
+    useMapEvents({
+      click(e) {
+        if (
+          activePinState === PinSelectionState.UNSELECTED ||
+          activePinState === PinSelectionState.NEW
+        ) {
+          const { lat, lng } = e.latlng
+          setTicketData((prev) => ({ ...prev, Latitude: lat, Longitude: lng }))
+          console.log(lat, lng)
+        }
+      },
+    })
+    return null
+  }
+
   const mapEl = (
     <MapContainer
       // @ts-expect-error React 19 typings mismatch for react-leaflet
@@ -88,6 +104,8 @@ function App() {
       style={{ height: '100%', width: '100%' }}
     >
       <MapResizer />
+      {/* Update coords on click when NEW/UNSELECTED */}
+      <MapClick />
       {tileLayer}
     </MapContainer>
   )
