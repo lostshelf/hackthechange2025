@@ -6,19 +6,13 @@ import * as L from 'leaflet'
 
 const API_URL = 'http://ec2-3-151-64-162.us-east-2.compute.amazonaws.com:3000';
 
-const IssueState = {
-  UNRESOLVED: "UNRESOLVED",
-  IN_PROGRESS: "IN PROGRESS",
-  RESOLVED: "RESOLVED"
-}
-
 function DiscussionPost({
   name = "INSERT NAME HERE",
   comment = "INSERT COMMENT HERE",
 }) {
   return (
     <>
-      <div className="grid grid-cols-[30px_80%] gap-4">
+      <div className="grid grid-cols-1 gap-4">
         {/* User name and comment */}
         <div className="text-left">
           {/* Username */}
@@ -56,13 +50,13 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 })
 
-type PinProps = { lat: number; lng: number; opacity?: number, onClick? }
-function Pin({ lat, lng, opacity = 1, onClick }: PinProps) {
+type PinProps = { lat: number; lng: number; opacity?: number, onClick?, ticket }
+function Pin({ lat, lng, opacity = 1, onClick, ticket }: PinProps) {
   const handleMarkerClick = useCallback((event) => {
     if (onClick) {
-      onClick(event, {lat, lng, opacity});
+      onClick(event, {lat, lng, opacity, ticket});
     }
-  }, [onClick, {lat, lng, opacity}]);
+  }, [onClick, {lat, lng, opacity, ticket}]);
   const markerEventHandlers = {
     click: handleMarkerClick,
   };
@@ -101,11 +95,12 @@ const useApiData = (endpoint: string) => {
 
 
 function HomePage() {
-  const [activePinState, setPinState] = useState(PinSelectionState.SELECTED)  
+  const [activePinState, setPinState] = useState(PinSelectionState.UNSELECTED)  
   
-  const [selectedTicketData, setSelectedTicketData] = useState({
+  const [selectedTicketData] = useState({
     Image: "",
     Title: "",
+    State: "",
     Description: "",
     Latitude: 0,
     Longitude: 0,
@@ -125,9 +120,16 @@ function HomePage() {
     if (tic.latitude == null || tic.longitude == null) {
       return null;
     }
-    return (<Pin lat={tic.latitude} lng={tic.longitude} opacity={1} onClick={(event) => {
-      setPinState(PinSelectionState.SELECTED),
-      
+    return (<Pin ticket={tic} lat={tic.latitude} lng={tic.longitude} opacity={1} onClick={(event, data) => {
+      setPinState(PinSelectionState.SELECTED)
+
+      // console.log(data.ticket)
+
+      selectedTicketData.Description = data.ticket.description
+      selectedTicketData.Title = data.ticket.title
+      selectedTicketData.Latitude = data.ticket.latitude
+      selectedTicketData.Longitude = data.ticket.longitude
+      selectedTicketData.State = data.ticket.state
     }}/>)
   }) : null;
 
@@ -226,10 +228,10 @@ function HomePage() {
 
                   <div className="grid grid-cols-[4%_96%] gap-2 items-center">
                     <button aria-label="Push" className="text-gray-400 text-3xl! text-center p-0!"> 🡅 </button>
-                    <p className="text-[2rem] font-extrabold">{newTicketData.Title || 'INSERT TITLE HERE'}</p>
+                    <p className="text-[2rem] font-extrabold">{selectedTicketData.Title}</p>
                   </div>
 
-                  <p className="text-[1.5rem]">{newTicketData.Description || 'INSERT SUMMARY HERE'}</p>
+                  <p className="text-[1.5rem]">{selectedTicketData.Description}</p>
                 </div>
               </div>
 
@@ -334,7 +336,7 @@ function HomePage() {
             <div className="bg-gray-900 text-left m-0 p-2 h-full w-full flex flex-col overflow-hidden">
               {/* State of Issue */}
               <p className="pl-2 m-1 font-medium text-[2rem]">
-                Current State: {IssueState.UNRESOLVED}
+                Current State: {selectedTicketData.State}
               </p>
 
               <div className="text-xs bg-gray-800 w-full p-2 rounded-2xl flex-1 min-h-0 overflow-y-auto">
