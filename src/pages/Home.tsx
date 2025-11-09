@@ -54,9 +54,9 @@ type PinProps = { lat: number; lng: number; opacity?: number, onClick?, ticket }
 function Pin({ lat, lng, opacity = 1, onClick, ticket }: PinProps) {
   const handleMarkerClick = useCallback((event) => {
     if (onClick) {
-      onClick(event, {lat, lng, opacity, ticket});
+      onClick(event, { lat, lng, opacity, ticket });
     }
-  }, [onClick, {lat, lng, opacity, ticket}]);
+  }, [onClick, { lat, lng, opacity, ticket }]);
   const markerEventHandlers = {
     click: handleMarkerClick,
   };
@@ -72,11 +72,11 @@ const useApiData = (endpoint: string) => {
     const fetchData = async () => {
       try {
         const response = await fetch(`${API_URL}${endpoint}`);
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error. status: ${response.status}`);
         }
-        
+
         const result = await response.json();
 
         setData(result);
@@ -95,9 +95,9 @@ const useApiData = (endpoint: string) => {
 
 
 function HomePage() {
-  const [activePinState, setPinState] = useState(PinSelectionState.UNSELECTED)  
-  
-  const [selectedTicketData] = useState({
+  const [activePinState, setPinState] = useState(PinSelectionState.UNSELECTED)
+
+  const [selectedTicketData, setSelectedTicketData] = useState({
     Image: "",
     Title: "",
     State: "",
@@ -114,7 +114,7 @@ function HomePage() {
     Longitude: 0
   })
 
-  const { data: t, loading, error} = useApiData("/api/issue/get_all");
+  const { data: t, loading, error } = useApiData("/api/issue/get_all");
 
   const pins = t && Array.isArray(t) ? t.map((tic) => {
     if (tic.latitude == null || tic.longitude == null) {
@@ -123,14 +123,19 @@ function HomePage() {
     return (<Pin ticket={tic} lat={tic.latitude} lng={tic.longitude} opacity={1} onClick={(event, data) => {
       setPinState(PinSelectionState.SELECTED)
 
-      // console.log(data.ticket)
+      console.log(data.ticket)
 
-      selectedTicketData.Description = data.ticket.description
-      selectedTicketData.Title = data.ticket.title
-      selectedTicketData.Latitude = data.ticket.latitude
-      selectedTicketData.Longitude = data.ticket.longitude
-      selectedTicketData.State = data.ticket.state
-    }}/>)
+      setSelectedTicketData({
+        Image: "",
+        Messages : [],
+        Description : data.ticket.description,
+        Title : data.ticket.title,
+        Latitude : data.ticket.latitude,
+        Longitude : data.ticket.longitude,
+        State : data.ticket.state}
+      )
+
+    }} />)
   }) : null;
 
   const [message, setMessage] = useState("")
@@ -244,7 +249,7 @@ function HomePage() {
               {/* Image and Description */}
               <div className="absolute bottom-0 left-0 right-0 grid grid-cols-2 bg-gray-950/80 backdrop-blur-sm z-[1100]">
 
-                <div className="grid grid-cols-1"> 
+                <div className="grid grid-cols-1">
                   {newTicketData.Image ? (
                     <>
                       <img src={newTicketData.Image} className="w-full h-48 object-cover rounded" />
