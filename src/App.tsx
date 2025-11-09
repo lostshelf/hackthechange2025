@@ -102,6 +102,11 @@ function App() {
             <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
 
           </div>
+
+          <div className="container h-[20%] bg-gray-700 rounded-2xl mt-2">
+          
+          </div>
+
         </div>
       </div>
     </div>
