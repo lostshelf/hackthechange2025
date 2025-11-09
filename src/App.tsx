@@ -4,22 +4,16 @@ import type React from 'react'
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 
 const IssueState = {
-  UNATTENDED: "UNATTENDED",
+  UNRESOLVED: "UNRESOLVED",
   IN_PROGRESS: "IN PROGRESS",
   RESOLVED: "RESOLVED"
-}
-
-type DiscussionPostProps = {
-  avatarUrl?: string
-  name?: string
-  comment?: string
 }
 
 function DiscussionPost({
   avatarUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
   name = "INSERT NAME HERE",
   comment = "INSERT COMMENT HERE",
-}: DiscussionPostProps) {
+}) {
   return (
     <>
       <div className="grid grid-cols-[30px_80%] gap-4">
@@ -38,7 +32,18 @@ function DiscussionPost({
   )
 }
 
+const PinSelectionState = {
+  // No pin is selected
+  UNSELECTED: 0,
+  // A new pin is elected and a ticket is being created
+  NEW: 1,
+  // An old pin is being selected and a ticket is being observed
+  SELECTED: 2
+}
+
 function App() {
+  let [activePinState, setPinState] = useState(PinSelectionState.UNSELECTED)
+
   const [message, setMessage] = useState("")
   const handleSend: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
@@ -47,9 +52,9 @@ function App() {
     setMessage("")
   }
   const tileLayer = (
-    // @ts-expect-error React 19 typings mismatch for react-leaflet
     <TileLayer
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      // @ts-expect-error React 19 typings mismatch for react-leaflet
       attribution="OpenStreetMap contributors"
     />
   )
@@ -69,8 +74,8 @@ function App() {
   }
 
   const mapEl = (
-    // @ts-expect-error React 19 typings mismatch for react-leaflet
     <MapContainer
+    // @ts-expect-error React 19 typings mismatch for react-leaflet
       center={[-34.6037, -58.3816]}
       zoom={13}
       scrollWheelZoom
@@ -100,7 +105,7 @@ function App() {
             <div className="text-left p-2">
 
               <div className="grid grid-cols-[4%_96%] gap-2 items-center">
-                <button aria-label="Push" className="text-gray-400 text-3xl! text-center p-0!">🡅</button>
+                <button aria-label="Push" className="text-gray-400 text-3xl! text-center p-0!"> 🡅 </button>
                 <p className="text-[2rem] font-extrabold">INSERT TITLE HERE</p>
               </div>
 
@@ -114,7 +119,7 @@ function App() {
         <div className="bg-gray-900 text-left m-0 p-2 h-full w-full flex flex-col overflow-hidden">
           {/* State of Issue */}
           <p className="pl-2 m-1 font-medium text-[2rem]">
-            Current State: {IssueState.UNATTENDED}
+            Current State: {IssueState.UNRESOLVED}
           </p>
 
           <div className="text-xs bg-gray-800 w-full p-2 rounded-2xl flex-1 min-h-0 overflow-y-auto">
