@@ -58,7 +58,9 @@ L.Icon.Default.mergeOptions({
 
 type PinProps = { lat: number; lng: number; opacity?: number }
 function Pin({ lat, lng, opacity = 1 }: PinProps) {
-  // Simple wrapper around Leaflet Marker with custom icon
+  const handleMarkerClick = useCallback((event) => {
+
+  });
   return <Marker position={[lat, lng]} icon={PIN_ICON} opacity={opacity} />
 }
 
@@ -77,7 +79,7 @@ const useApiData = (endpoint: string) => {
         }
         
         const result = await response.json();
-        
+
         setData(result);
       } catch (e) {
         setError(e.message);
@@ -107,8 +109,16 @@ function HomePage() {
     Longitude: 0
   })
 
-  const { data: t, loading, error } = useApiData("/api/issue/get_all");
-  const [tickets, setTickets] = useState(t);
+  const { data: t, loading, error} = useApiData("/api/issue/get_all");
+
+  console.log(error)
+
+  const pins = t && Array.isArray(t) ? t.map((tic) => {
+    if (tic.latitude == null || tic.longitude == null) {
+      return null;
+    }
+    return (<Pin lat={tic.latitude} lng={tic.longitude} opacity={1}/>)
+  }) : null;
 
   const [message, setMessage] = useState("")
   const handleSend: React.FormEventHandler<HTMLFormElement> = (e) => {
@@ -174,15 +184,10 @@ function HomePage() {
           opacity={activePinState === PinSelectionState.UNSELECTED ? 0 : 1}
         />
       )}
-      {tileLayer}
-      <div onClick={ticketClicked}>
       {
-        tickets.map((tic) => (
-          <Marker key={tic.id} position={[tic.latitude, tic.longitude]}>
-          </Marker>
-        ));
+        pins
       }
-      </div>
+      {tileLayer}
     </MapContainer>
   )
 
