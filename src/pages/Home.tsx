@@ -102,7 +102,15 @@ const useApiData = (endpoint: string) => {
 
 function HomePage() {
   const [activePinState, setPinState] = useState(PinSelectionState.SELECTED)  
-
+  
+  const [selectedTicketData, setSelectedTicketData] = useState({
+    Image: "",
+    Title: "",
+    Description: "",
+    Latitude: 0,
+    Longitude: 0,
+    Messages: []
+  })
   const [newTicketData, setNewTicketData] = useState({
     Image: "",
     Title: "",
@@ -117,7 +125,10 @@ function HomePage() {
     if (tic.latitude == null || tic.longitude == null) {
       return null;
     }
-    return (<Pin lat={tic.latitude} lng={tic.longitude} opacity={1} onClick={(event) => {setPinState(PinSelectionState.SELECTED)}}/>)
+    return (<Pin lat={tic.latitude} lng={tic.longitude} opacity={1} onClick={(event) => {
+      setPinState(PinSelectionState.SELECTED),
+      
+    }}/>)
   }) : null;
 
   const [message, setMessage] = useState("")
