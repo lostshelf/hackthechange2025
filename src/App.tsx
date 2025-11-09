@@ -54,10 +54,10 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 })
 
-type PinProps = { lat: number; lng: number }
-function Pin({ lat, lng }: PinProps) {
+type PinProps = { lat: number; lng: number; opacity?: number }
+function Pin({ lat, lng, opacity = 1 }: PinProps) {
   // Simple wrapper around Leaflet Marker with custom icon
-  return <Marker position={[lat, lng]} icon={PIN_ICON}  />
+  return <Marker position={[lat, lng]} icon={PIN_ICON} opacity={opacity} />
 }
 
 function App() {
@@ -129,7 +129,11 @@ function App() {
       {/* Update coords on click when NEW/UNSELECTED */}
       <MapClick />
       {(newTicketData.Latitude !== 0 || newTicketData.Longitude !== 0) && (
-        <Pin lat={newTicketData.Latitude} lng={newTicketData.Longitude} />
+        <Pin
+          lat={newTicketData.Latitude}
+          lng={newTicketData.Longitude}
+          opacity={activePinState === PinSelectionState.UNSELECTED ? 0 : 1}
+        />
       )}
       {tileLayer}
     </MapContainer>
