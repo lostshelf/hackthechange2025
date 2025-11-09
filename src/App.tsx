@@ -39,9 +39,9 @@ const PinSelectionState = {
 }
 
 function App() {
-  let [activePinState, setPinState] = useState(PinSelectionState.NEW)
+  const [activePinState, setPinState] = useState(PinSelectionState.NEW)
 
-  let [ticketData, setTicketData] = useState({
+  const [ticketData, setTicketData] = useState({
     Image: "",
     Title: "",
     Description: "",
