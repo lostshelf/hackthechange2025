@@ -127,12 +127,13 @@ function HomePage() {
 
       setSelectedTicketData({
         Image: "",
-        Messages : [],
-        Description : data.ticket.description,
-        Title : data.ticket.title,
-        Latitude : data.ticket.latitude,
-        Longitude : data.ticket.longitude,
-        State : data.ticket.state}
+        Messages: [],
+        Description: data.ticket.description,
+        Title: data.ticket.title,
+        Latitude: data.ticket.latitude,
+        Longitude: data.ticket.longitude,
+        State: data.ticket.state
+      }
       )
 
     }} />)
