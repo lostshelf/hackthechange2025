@@ -34,14 +34,24 @@ const PinSelectionState = {
   UNSELECTED: 0,
   // A new pin is elected and a ticket is being created
   NEW: 1,
-  // An old pin is being selected and a ticket is being observed
+  // An already placed pin is being selected and a ticket is being observed
   SELECTED: 2
+}
+
+function Pin() {
+  return(
+    <>
+    <button>
+      
+    </button>
+    </>
+  )
 }
 
 function App() {
   const [activePinState, setPinState] = useState(PinSelectionState.NEW)
 
-  const [ticketData, setTicketData] = useState({
+  const [newTicketData, setNewTicketData] = useState({
     Image: "",
     Title: "",
     Description: "",
@@ -86,9 +96,11 @@ function App() {
           activePinState === PinSelectionState.NEW
         ) {
           const { lat, lng } = e.latlng
-          setTicketData((prev) => ({ ...prev, Latitude: lat, Longitude: lng }))
+          setNewTicketData((prev) => ({ ...prev, Latitude: lat, Longitude: lng }))
           console.log(lat, lng)
         }
+
+        setPinState(PinSelectionState.NEW)
       },
     })
     return null
@@ -127,7 +139,7 @@ function App() {
 
               {/* Image and Description */}
               <div className="absolute bottom-0 left-0 right-0 grid grid-cols-2 bg-gray-950/80 backdrop-blur-sm z-[1100]">
-                <img src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png" className="w-full h-48 object-cover" />
+                <img src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png" className="w-full h-48 cover" />
 
                 <div className="text-left p-2">
 
@@ -136,7 +148,7 @@ function App() {
                     <p className="text-[2rem] font-extrabold">{ticketData.Title || 'INSERT TITLE HERE'}</p>
                   </div>
 
-                  <p className="text-[1.5rem]">{ticketData.Description || 'INSERT SUMMARY HERE'}</p>
+                  <p className="text-[1.5rem]">{newTicketData.Description || 'INSERT SUMMARY HERE'}</p>
                 </div>
               </div>
 
@@ -150,9 +162,9 @@ function App() {
               <div className="absolute bottom-0 left-0 right-0 grid grid-cols-2 bg-gray-950/80 backdrop-blur-sm z-[1100]">
 
                 <div className="grid grid-cols-1"> 
-                  {ticketData.Image ? (
+                  {newTicketData.Image ? (
                     <>
-                      <img src={ticketData.Image} className="w-full h-48 object-cover rounded" />
+                      <img src={newTicketData.Image} className="w-full h-48 object-cover rounded" />
                       <label
                         htmlFor="ticket-image-input"
                         className="mt-2 inline-flex items-center justify-center rounded-md border border-gray-600 bg-gray-800/60 text-white px-3 py-2 cursor-pointer hover:bg-gray-700/60"
@@ -178,12 +190,12 @@ function App() {
                       const file = e.currentTarget.files?.[0]
                       if (file) {
                         const url = URL.createObjectURL(file)
-                        setTicketData({
+                        setNewTicketData({
                           Image: url,
-                          Title: ticketData.Title,
-                          Description: ticketData.Description,
-                          Longitude: ticketData.Longitude,
-                          Latitude: ticketData.Latitude
+                          Title: newTicketData.Title,
+                          Description: newTicketData.Description,
+                          Longitude: newTicketData.Longitude,
+                          Latitude: newTicketData.Latitude
                         })
                       }
                     }}
@@ -192,24 +204,35 @@ function App() {
 
                 <div className="text-left p-2">
 
-                  <div className="grid grid-cols-[4%_96%] gap-2 items-center">
+                  <div className="grid grid-cols-[4%_82.5%_10%] gap-2 items-center">
                     <button aria-label="Push" className="text-gray-400 text-3xl! text-center p-0!"> 🡅 </button>
                     <input
                       type="text"
-                      value={ticketData.Title}
-                      onChange={(e) => setTicketData(prev => ({ ...prev, Title: e.target.value }))}
+                      value={newTicketData.Title}
+                      onChange={(e) => setNewTicketData(prev => ({ ...prev, Title: e.target.value }))}
                       placeholder="Insert title here"
                       className="bg-transparent text-white text-[2rem] font-extrabold outline-none border-b border-gray-600 focus:border-blue-500"
                     />
+                    <button onClick={
+                      () => {
+                        setPinState(PinSelectionState.UNSELECTED)
+                      }
+                    }>X </button>
                   </div>
 
                   <textarea
-                    value={ticketData.Description}
-                    onChange={(e) => setTicketData(prev => ({ ...prev, Description: e.target.value }))}
+                    value={newTicketData.Description}
+                    onChange={(e) => setNewTicketData(prev => ({ ...prev, Description: e.target.value }))}
                     placeholder="Insert summary here"
                     rows={3}
                     className="mt-2 w-full bg-transparent text-white text-[1.1rem] outline-none border border-gray-600 rounded-md p-2 focus:border-blue-500"
                   />
+
+                  <button className="w-full" onClick={
+                    () => {
+                      setPinState(PinSelectionState.UNSELECTED)
+                    }
+                  }>Submit</button>
                 </div>
               </div>
 
