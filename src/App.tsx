@@ -42,7 +42,7 @@ const PinSelectionState = {
 }
 
 function App() {
-  let [activePinState, setPinState] = useState(PinSelectionState.UNSELECTED)
+  let [activePinState, setPinState] = useState(PinSelectionState.SELECTED)
 
   const [message, setMessage] = useState("")
   const handleSend: React.FormEventHandler<HTMLFormElement> = (e) => {
@@ -53,7 +53,7 @@ function App() {
   }
   const tileLayer = (
     <TileLayer
-    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       // @ts-expect-error React 19 typings mismatch for react-leaflet
       attribution="OpenStreetMap contributors"
     />
@@ -75,7 +75,7 @@ function App() {
 
   const mapEl = (
     <MapContainer
-    // @ts-expect-error React 19 typings mismatch for react-leaflet
+      // @ts-expect-error React 19 typings mismatch for react-leaflet
       center={[-34.6037, -58.3816]}
       zoom={13}
       scrollWheelZoom
@@ -95,23 +95,34 @@ function App() {
 
         <div className="relative h-full w-full">
           {/* Map */}
+
           {mapEl}
 
-          {/* Image and Description */}
-          <div className="absolute bottom-0 left-0 right-0 grid grid-cols-2 bg-gray-950/80 backdrop-blur-sm z-[1100]">
-            <img src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png" className="w-full h-48 object-cover" />
+          {/* If a Pin is Selected and not new*/}
+          {activePinState === PinSelectionState.SELECTED && (
+              <>
+
+                {/* Image and Description */}
+                <div className="absolute bottom-0 left-0 right-0 grid grid-cols-2 bg-gray-950/80 backdrop-blur-sm z-[1100]">
+                  <img src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png" className="w-full h-48 object-cover" />
 
 
-            <div className="text-left p-2">
+                  <div className="text-left p-2">
 
-              <div className="grid grid-cols-[4%_96%] gap-2 items-center">
-                <button aria-label="Push" className="text-gray-400 text-3xl! text-center p-0!"> 🡅 </button>
-                <p className="text-[2rem] font-extrabold">INSERT TITLE HERE</p>
-              </div>
+                    <div className="grid grid-cols-[4%_96%] gap-2 items-center">
+                      <button aria-label="Push" className="text-gray-400 text-3xl! text-center p-0!"> 🡅 </button>
+                      <p className="text-[2rem] font-extrabold">INSERT TITLE HERE</p>
+                    </div>
 
-              <p className="text-[1.5rem]">INSERT SUMMARY HERE</p>
-            </div>
-          </div>
+                    <p className="text-[1.5rem]">INSERT SUMMARY HERE</p>
+                  </div>
+                </div>
+
+              </>)
+          }
+
+          {/* If a Pin is Selected and new */}
+          {/* {activePinState === PinSelectionState.} */}
 
         </div>
 
@@ -125,31 +136,31 @@ function App() {
           <div className="text-xs bg-gray-800 w-full p-2 rounded-2xl flex-1 min-h-0 overflow-y-auto">
 
             {/* A discussion post*/}
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s"/>
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
 
           </div>
 
