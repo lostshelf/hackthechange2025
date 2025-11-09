@@ -1,8 +1,10 @@
 import '../Home.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import type React from 'react'
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import * as L from 'leaflet'
+
+const API_URL = 'http://ec2-3-151-64-162.us-east-2.compute.amazonaws.com:3000';
 
 const IssueState = {
   UNRESOLVED: "UNRESOLVED",
@@ -54,14 +56,52 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 })
 
-type PinProps = { lat: number; lng: number; opacity?: number }
-function Pin({ lat, lng, opacity = 1 }: PinProps) {
-  // Simple wrapper around Leaflet Marker with custom icon
-  return <Marker position={[lat, lng]} icon={PIN_ICON} opacity={opacity} />
+type PinProps = { lat: number; lng: number; opacity?: number, onClick? }
+function Pin({ lat, lng, opacity = 1, onClick }: PinProps) {
+  const handleMarkerClick = useCallback((event) => {
+    if (onClick) {
+      onClick(event, {lat, lng, opacity});
+    }
+  }, [onClick, {lat, lng, opacity}]);
+  const markerEventHandlers = {
+    click: handleMarkerClick,
+  };
+  return <Marker position={[lat, lng]} eventHandlers={markerEventHandlers} icon={PIN_ICON} opacity={opacity} />
 }
 
+const useApiData = (endpoint: string) => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${API_URL}${endpoint}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error. status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+
+        setData(result);
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [endpoint]);
+
+  return { data, loading, error };
+}
+
+
 function HomePage() {
-  const [activePinState, setPinState] = useState(PinSelectionState.SELECTED)
+  const [activePinState, setPinState] = useState(PinSelectionState.SELECTED)  
 
   const [newTicketData, setNewTicketData] = useState({
     Image: "",
@@ -70,6 +110,15 @@ function HomePage() {
     Latitude: 0,
     Longitude: 0
   })
+
+  const { data: t, loading, error} = useApiData("/api/issue/get_all");
+
+  const pins = t && Array.isArray(t) ? t.map((tic) => {
+    if (tic.latitude == null || tic.longitude == null) {
+      return null;
+    }
+    return (<Pin lat={tic.latitude} lng={tic.longitude} opacity={1} onClick={(event) => {setPinState(PinSelectionState.SELECTED)}}/>)
+  }) : null;
 
   const [message, setMessage] = useState("")
   const handleSend: React.FormEventHandler<HTMLFormElement> = (e) => {
@@ -107,6 +156,7 @@ function HomePage() {
           activePinState === PinSelectionState.NEW
         ) {
           const { lat, lng } = e.latlng
+
           setNewTicketData((prev) => ({ ...prev, Latitude: lat, Longitude: lng }))
           console.log(lat, lng)
         }
@@ -132,9 +182,12 @@ function HomePage() {
         <Pin
           lat={newTicketData.Latitude}
           lng={newTicketData.Longitude}
-          opacity={activePinState === PinSelectionState.UNSELECTED ? 0 : 1}
+          opacity={activePinState === PinSelectionState.SELECTED ? 0 : 1}
         />
       )}
+      {
+        pins
+      }
       {tileLayer}
     </MapContainer>
   )
