@@ -92,6 +92,10 @@ const useApiData = (endpoint: string) => {
   return { data, loading, error };
 }
 
+function ticketClicked(event) {
+  // TODO: implement on click event for pins
+}
+
 function HomePage() {
   const [activePinState, setPinState] = useState(PinSelectionState.SELECTED)  
 
@@ -103,9 +107,8 @@ function HomePage() {
     Longitude: 0
   })
 
-  const { data: tickets, loading, error } = useApiData("/api/issue/get_all");
-
-  console.log(tickets);
+  const { data: t, loading, error } = useApiData("/api/issue/get_all");
+  const [tickets, setTickets] = useState(t);
 
   const [message, setMessage] = useState("")
   const handleSend: React.FormEventHandler<HTMLFormElement> = (e) => {
@@ -172,6 +175,14 @@ function HomePage() {
         />
       )}
       {tileLayer}
+      <div onClick={ticketClicked}>
+      {
+        tickets.map((tic) => (
+          <Marker key={tic.id} position={[tic.latitude, tic.longitude]}>
+          </Marker>
+        ));
+      }
+      </div>
     </MapContainer>
   )
 
