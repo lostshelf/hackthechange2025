@@ -103,9 +103,9 @@ function App() {
 
           </div>
 
-          <div className="container h-[20%] bg-gray-700 rounded-2xl mt-2">
+          <input type="text" className="container h-[20%] bg-gray-700 rounded-2xl mt-2">
           
-          </div>
+          </input>
 
         </div>
       </div>
