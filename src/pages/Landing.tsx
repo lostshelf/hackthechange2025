@@ -1,7 +1,10 @@
+
+
 function LandingPage() {
     // Landing page which shows off our project
     return (
         <>
+            
         </>
     )
 }

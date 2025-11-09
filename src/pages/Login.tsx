@@ -20,7 +20,7 @@ function LoginPage() {
     }
 
     return (
-        <div className="bg-black border-b border-black rounded-lg p-2 h-screen text-center flex flex-col items-center justify-center font-sans">
+        <div className="bg-black border-b border-black rounded-lg p-2 h-screen text-center flex flex-col items-center justify-center font-sans w-screen h-screen">
             {/* App Title */}
             <h1 className="text-3xl font-bold mb-6 text-white">
                 FIX-IT-CALGARY
