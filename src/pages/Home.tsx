@@ -1,5 +1,5 @@
 import '../Home.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import type React from 'react'
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import * as L from 'leaflet'
@@ -56,12 +56,17 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 })
 
-type PinProps = { lat: number; lng: number; opacity?: number }
-function Pin({ lat, lng, opacity = 1 }: PinProps) {
+type PinProps = { lat: number; lng: number; opacity?: number, onClick? }
+function Pin({ lat, lng, opacity = 1, onClick }: PinProps) {
   const handleMarkerClick = useCallback((event) => {
-
-  });
-  return <Marker position={[lat, lng]} icon={PIN_ICON} opacity={opacity} />
+    if (onClick) {
+      onClick(event, {lat, lng, opacity});
+    }
+  }, [onClick, {lat, lng, opacity}]);
+  const markerEventHandlers = {
+    click: handleMarkerClick,
+  };
+  return <Marker position={[lat, lng]} eventHandlers={markerEventHandlers} icon={PIN_ICON} opacity={opacity} />
 }
 
 const useApiData = (endpoint: string) => {
@@ -94,9 +99,6 @@ const useApiData = (endpoint: string) => {
   return { data, loading, error };
 }
 
-function ticketClicked(event) {
-  // TODO: implement on click event for pins
-}
 
 function HomePage() {
   const [activePinState, setPinState] = useState(PinSelectionState.SELECTED)  
@@ -111,13 +113,11 @@ function HomePage() {
 
   const { data: t, loading, error} = useApiData("/api/issue/get_all");
 
-  console.log(error)
-
   const pins = t && Array.isArray(t) ? t.map((tic) => {
     if (tic.latitude == null || tic.longitude == null) {
       return null;
     }
-    return (<Pin lat={tic.latitude} lng={tic.longitude} opacity={1}/>)
+    return (<Pin lat={tic.latitude} lng={tic.longitude} opacity={1} onClick={(event) => {setPinState(PinSelectionState.SELECTED)}}/>)
   }) : null;
 
   const [message, setMessage] = useState("")
@@ -156,6 +156,7 @@ function HomePage() {
           activePinState === PinSelectionState.NEW
         ) {
           const { lat, lng } = e.latlng
+
           setNewTicketData((prev) => ({ ...prev, Latitude: lat, Longitude: lng }))
           console.log(lat, lng)
         }
@@ -181,7 +182,7 @@ function HomePage() {
         <Pin
           lat={newTicketData.Latitude}
           lng={newTicketData.Longitude}
-          opacity={activePinState === PinSelectionState.UNSELECTED ? 0 : 1}
+          opacity={activePinState === PinSelectionState.SELECTED ? 0 : 1}
         />
       )}
       {
