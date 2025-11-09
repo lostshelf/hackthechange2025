@@ -1,16 +1,11 @@
 import "../App.css";
 import { useState } from "react";
 
+const API_URL = 'http://ec2-3-151-64-162.us-east-2.compute.amazonaws.com:3000';
+
 function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
-    const handleLogin = (e) => {
-        e.preventDefault();
-        // TODO: Verify information through the server
-        console.log(`Inputted email is: ${email}`);
-        console.log(`Inputted password is: ${password}`);
-    }
 
     const handleCreate = (e) => {
         e.preventDefault();
