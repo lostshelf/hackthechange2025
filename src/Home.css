@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+/* Style the upvote button to be transparent and remove focus outlines */
+button[aria-label="Push"],
+button[aria-label="Upvote"] {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+button[aria-label="Push"]:focus,
+button[aria-label="Push"]:focus-visible,
+button[aria-label="Upvote"]:focus,
+button[aria-label="Upvote"]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
