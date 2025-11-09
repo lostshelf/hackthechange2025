@@ -1,7 +1,8 @@
 import './App.css'
 import { useEffect, useState } from 'react'
 import type React from 'react'
-import { MapContainer, TileLayer, useMap, useMapEvents } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
+import * as L from 'leaflet'
 
 const IssueState = {
   UNRESOLVED: "UNRESOLVED",
@@ -38,14 +39,25 @@ const PinSelectionState = {
   SELECTED: 2
 }
 
-function Pin() {
-  return(
-    <>
-    <button>
-      
-    </button>
-    </>
-  )
+// Custom green pin icon (provided URL)
+const PIN_ICON = L.icon({
+  iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Map_pin_icon_green.svg/1504px-Map_pin_icon_green.svg.png',
+  iconSize: [32, 48],
+  iconAnchor: [16, 48],
+  popupAnchor: [0, -48],
+})
+
+// Ensure Leaflet default marker icons load under Vite by using CDN asset URLs
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+})
+
+type PinProps = { lat: number; lng: number }
+function Pin({ lat, lng }: PinProps) {
+  // Simple wrapper around Leaflet Marker with custom icon
+  return <Marker position={[lat, lng]} icon={PIN_ICON}  />
 }
 
 function App() {
@@ -69,7 +81,6 @@ function App() {
   const tileLayer = (
     <TileLayer
       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      // @ts-expect-error React 19 typings mismatch for react-leaflet
       attribution="OpenStreetMap contributors"
     />
   )
@@ -108,7 +119,6 @@ function App() {
 
   const mapEl = (
     <MapContainer
-      // @ts-expect-error React 19 typings mismatch for react-leaflet
       center={[-34.6037, -58.3816]}
       zoom={13}
       scrollWheelZoom
@@ -118,6 +128,9 @@ function App() {
       <MapResizer />
       {/* Update coords on click when NEW/UNSELECTED */}
       <MapClick />
+      {(newTicketData.Latitude !== 0 || newTicketData.Longitude !== 0) && (
+        <Pin lat={newTicketData.Latitude} lng={newTicketData.Longitude} />
+      )}
       {tileLayer}
     </MapContainer>
   )
@@ -145,7 +158,7 @@ function App() {
 
                   <div className="grid grid-cols-[4%_96%] gap-2 items-center">
                     <button aria-label="Push" className="text-gray-400 text-3xl! text-center p-0!"> 🡅 </button>
-                    <p className="text-[2rem] font-extrabold">{ticketData.Title || 'INSERT TITLE HERE'}</p>
+                    <p className="text-[2rem] font-extrabold">{newTicketData.Title || 'INSERT TITLE HERE'}</p>
                   </div>
 
                   <p className="text-[1.5rem]">{newTicketData.Description || 'INSERT SUMMARY HERE'}</p>
@@ -230,6 +243,10 @@ function App() {
 
                   <button className="w-full" onClick={
                     () => {
+                      if (!(newTicketData.Description && newTicketData.Latitude && newTicketData.Longitude && newTicketData.Title)) {
+                        alert("Please fill in all required fields (Everything except for image)")
+                        return;
+                      }
                       setPinState(PinSelectionState.UNSELECTED)
                     }
                   }>Submit</button>
