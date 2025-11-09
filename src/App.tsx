@@ -10,15 +10,12 @@ const IssueState = {
 }
 
 function DiscussionPost({
-  avatarUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
   name = "INSERT NAME HERE",
   comment = "INSERT COMMENT HERE",
 }) {
   return (
     <>
       <div className="grid grid-cols-[30px_80%] gap-4">
-        {/* User profile */}
-        <img src={avatarUrl} className="w-50px! rounded-full" />
         {/* User name and comment */}
         <div className="text-left">
           {/* Username */}
@@ -42,7 +39,15 @@ const PinSelectionState = {
 }
 
 function App() {
-  let [activePinState, setPinState] = useState(PinSelectionState.SELECTED)
+  let [activePinState, setPinState] = useState(PinSelectionState.NEW)
+
+  let [ticketData, setTicketData] = useState({
+    Image : "",
+    Title : "",
+    Description : "",
+    Latitude: 0,
+    Longitude: 0
+  })
 
   const [message, setMessage] = useState("")
   const handleSend: React.FormEventHandler<HTMLFormElement> = (e) => {
@@ -100,33 +105,84 @@ function App() {
 
           {/* If a Pin is Selected and not new*/}
           {activePinState === PinSelectionState.SELECTED && (
-              <>
+            <>
 
-                {/* Image and Description */}
-                <div className="absolute bottom-0 left-0 right-0 grid grid-cols-2 bg-gray-950/80 backdrop-blur-sm z-[1100]">
-                  <img src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png" className="w-full h-48 object-cover" />
+              {/* Image and Description */}
+              <div className="absolute bottom-0 left-0 right-0 grid grid-cols-2 bg-gray-950/80 backdrop-blur-sm z-[1100]">
+                <img src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png" className="w-full h-48 object-cover" />
 
+                <div className="text-left p-2">
 
-                  <div className="text-left p-2">
-
-                    <div className="grid grid-cols-[4%_96%] gap-2 items-center">
-                      <button aria-label="Push" className="text-gray-400 text-3xl! text-center p-0!"> 🡅 </button>
-                      <p className="text-[2rem] font-extrabold">INSERT TITLE HERE</p>
-                    </div>
-
-                    <p className="text-[1.5rem]">INSERT SUMMARY HERE</p>
+                  <div className="grid grid-cols-[4%_96%] gap-2 items-center">
+                    <button aria-label="Push" className="text-gray-400 text-3xl! text-center p-0!"> 🡅 </button>
+                    <p className="text-[2rem] font-extrabold">{ticketData.Title || 'INSERT TITLE HERE'}</p>
                   </div>
-                </div>
 
-              </>)
+                  <p className="text-[1.5rem]">{ticketData.Description || 'INSERT SUMMARY HERE'}</p>
+                </div>
+              </div>
+
+            </>)
           }
 
-          {/* If a Pin is Selected and new */}
-          {/* {activePinState === PinSelectionState.} */}
+          {/* If a Pin is Selected and must be created */}
+          {activePinState === PinSelectionState.NEW && (
+            <>
+              {/* Image and Description */}
+              <div className="absolute bottom-0 left-0 right-0 grid grid-cols-2 bg-gray-950/80 backdrop-blur-sm z-[1100]">
+
+                <div className="grid grid-cols-1">
+                  {ticketData.Image && (<img src={ticketData.Image} className="w-full h-48 object-cover rounded" />)}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hover:cursor-pointer"
+                    onChange={(e) => {
+                      const file = e.currentTarget.files?.[0]
+                      if (file) {
+                        const url = URL.createObjectURL(file)
+                        
+                        setTicketData({
+                          Image: url,
+                          Title: ticketData.Title,
+                          Description: ticketData.Description,
+                          Longitude: ticketData.Longitude,
+                          Latitude: ticketData.Latitude
+                        })
+                      }
+                    }}
+                  />
+                </div>
+
+                <div className="text-left p-2">
+
+                  <div className="grid grid-cols-[4%_96%] gap-2 items-center">
+                    <button aria-label="Push" className="text-gray-400 text-3xl! text-center p-0!"> 🡅 </button>
+                    <input
+                      type="text"
+                      value={ticketData.Title}
+                      onChange={(e) => setTicketData(prev => ({...prev, Title: e.target.value}))}
+                      placeholder="Insert title here"
+                      className="bg-transparent text-white text-[2rem] font-extrabold outline-none border-b border-gray-600 focus:border-blue-500"
+                    />
+                  </div>
+
+                  <textarea
+                    value={ticketData.Description}
+                    onChange={(e) => setTicketData(prev => ({...prev, Description: e.target.value}))}
+                    placeholder="Insert summary here"
+                    rows={3}
+                    className="mt-2 w-full bg-transparent text-white text-[1.1rem] outline-none border border-gray-600 rounded-md p-2 focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+            </>
+          )}
 
         </div>
 
-        {/* Column on the right */}
+        {/* Column on the right should only be visible to already created data*/}
         <div className="bg-gray-900 text-left m-0 p-2 h-full w-full flex flex-col overflow-hidden">
           {/* State of Issue */}
           <p className="pl-2 m-1 font-medium text-[2rem]">
@@ -136,31 +192,31 @@ function App() {
           <div className="text-xs bg-gray-800 w-full p-2 rounded-2xl flex-1 min-h-0 overflow-y-auto">
 
             {/* A discussion post*/}
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
-            <DiscussionPost name="Test Name" comment="My comment" avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0aG9zFLhxkkvzYlb27H0rMqpRlKVZ86Dug&s" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
+            <DiscussionPost name="Test Name" comment="My comment" />
 
           </div>
 
