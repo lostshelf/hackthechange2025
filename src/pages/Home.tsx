@@ -114,7 +114,8 @@ function HomePage() {
     Longitude: 0
   })
 
-  const { data: t, loading, error } = useApiData("/api/issue/get_all");
+  const [reloadPins, setReloadPins] = useState(0)
+  const { data: t, loading, error } = useApiData(`/api/issue/get_all?reload=${reloadPins}`);
 
   const pins = t && Array.isArray(t) ? t.map((tic) => {
     if (tic.latitude == null || tic.longitude == null) {
@@ -301,20 +302,34 @@ function HomePage() {
                         return;
                       }
 
-                      await fetch(`${API_URL}/api/issue/post`, {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                          title: newTicketData.Title,
-                          description: newTicketData.Description,
-                          latitude: newTicketData.Latitude,
-                          longitude: newTicketData.Longitude
-                        }),
-                      }); 
-                      
-                      setPinState(PinSelectionState.UNSELECTED)
+                      try {
+                        const res = await fetch(`${API_URL}/api/issue/post`, {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({
+                            title: newTicketData.Title,
+                            description: newTicketData.Description,
+                            latitude: newTicketData.Latitude,
+                            longitude: newTicketData.Longitude
+                          }),
+                        });
+                        // Trigger reload of pins regardless of response body
+                        setReloadPins((v) => v + 1)
+                      } catch (e) {
+                        console.error('Issue creation failed', e)
+                      } finally {
+                        // Clear draft pin and close composer
+                        setNewTicketData({
+                          Image: "",
+                          Title: "",
+                          Description: "",
+                          Latitude: 0,
+                          Longitude: 0,
+                        })
+                        setPinState(PinSelectionState.UNSELECTED)
+                      }
                     }
                   }>Submit</button>
                 </div>
