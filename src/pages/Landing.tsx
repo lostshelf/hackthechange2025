@@ -24,11 +24,11 @@ function LandingPage() {
                     FIX-IT-CALGARY
                 </h1>
                 <button
-                    onClick={() => navigate('/login')}
+                    onClick={() => navigate('/home')}
                     className="mt-4 px-5 py-2 border-2"
-                    aria-label="Log in"
+                    aria-label="Open App"
                 >
-                    Log In
+                    Open App
                 </button>
 
 
