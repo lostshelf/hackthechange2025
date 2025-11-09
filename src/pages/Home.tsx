@@ -189,7 +189,7 @@ function HomePage() {
 
   const mapEl = (
     <MapContainer
-      center={[-34.6037, -58.3816]}
+      center={[51.08726852880904, -113.96618055096764]}
       zoom={13}
       scrollWheelZoom
       className="h-full w-full z-0"
